@@ -1,0 +1,83 @@
+<nav dir="rtl" class="navbar navbar-expand-sm bg-success navbar-dark nav-fill">
+   <!-- Brand -->
+   <a class="navbar-brand text-light" href="/">دليل الهجرين</a>
+   <!-- Toggler/collapsibe Button -->
+   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+   <!-- Navbar links -->
+   <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+         <li class="nav-item">
+            <a class="nav-link text-nowrap" aria-current="page" href="/">الصفحة الرئيسية</a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link text-nowrap" aria-current="page" href="/requests">الطلبات</a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link text-nowrap" aria-current="page" href="/operations">العمليات</a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link text-nowrap" href="/executors">بنك المعلومات<img width="40px" height="25px" src="../../public/Library/bootstrap-icons-1.8.0/archive.svg"></img></a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link text-nowrap" href="/persons">جهات الاتصال<img width="40px" height="25px" src="../../public/Library/bootstrap-icons-1.8.0/card-text.svg"></img></a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link text-nowrap" href="/logout">تسجيل خروج</a>
+         </li>
+      </ul>
+   </div>
+   <!-- <form class="d-flex">
+     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+     <button class="btn btn-outline-success" type="submit">Search</button>
+   </form> -->
+</nav>
+<script defer>//No Jquery to executed before dom is fully loaded just header is enough and some pages <script src="Jquery"/> is below in the html file. So, jquery is not loaded yet.
+   //Highlight current page link that in navbar; by check if <title> text contains link text
+   //Example:
+   // <title>Alhajarayn | Home</title>
+   // Alhajarayn     <b>Home</b>     Privacy     Contacts
+
+   let links = document.querySelectorAll('#collapsibleNavbar ul li a.nav-link');
+   let title = document.querySelector('title');
+   for (let i = 0; i < links.length; i++)
+      if (title.innerText.includes(links[i].innerText))
+         links[i].classList.add('active');
+</script>
+<!--End Navbar-->
+
+<!--Begin Alert modal-->
+<!--Each page should have an Alert to alert the user if something went wrong. So, it is every where, so it's shared among pages'-->
+<div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.2); z-index: 99999" id="alert">
+   <div class="modal-dialog modal-dialog-centered modal modal-dialog-scrollable">
+      <div class="modal-content was-validated">
+         <div dir="rtl" class="modal-header text-white">
+            <h4 class="modal-title">تنبيه</h4>
+            <button dir="rtl" type="button" style="margin-left: 0" class="btn-close bg-white"
+               onclick="$('#alert').fadeOut('fast')"></button>
+         </div>
+         <div class="modal-body">
+            <p id="text">حدث خطأ ما...</p>
+         </div>
+      </div>
+   </div>
+</div>
+<script defer>//it is function that mostly won't call until the page is loaded. So, I think we can use JQuery here.
+
+   //shortcut that will show the alert modal, text and color are required parameter else are optional
+   function Alert(text, color, title, onClickClose) {
+      if (onClickClose)
+         $('#alert').find('button').click(function () { return onClickClose(); });
+      $('#alert').find('h4').text(title || 'تنبيه');
+      $("#alert")
+         .fadeIn("fast")
+         .find("#text")
+         .html(text||'حدث خطأ ما')
+         .parent()
+         .prev()
+         .css("background-color", "var(--bs-" + color + ")");
+   }
+
+</script>
+<!--End Alert modal-->

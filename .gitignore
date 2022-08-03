@@ -1,0 +1,9 @@
+node_modules
+public/Library/bootstrap-5.1.3-dist
+public/Library/bootstrap-icons-1.8.0
+public/Library/js/jquery-3.6.0.js
+public/Library/jquery-ui-1.13.1
+public/Js/jquery-3.6.0.js
+public/Js/jquery-ui.js
+/.env
+/package-lock.json

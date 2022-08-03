@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>العمليات</title>
+  <link rel="stylesheet" href="../public/Library/bootstrap-5.1.3-dist/css/bootstrap.css" />
+  <!-- <link rel="text" href="../public/Library/bootstrap-5.1.3-dist/css/bootstrap.css.map" /> -->
+  <!-- <link rel="files" href="../public/Library/bootstrap-icons-1.8.0" /> -->
+  <!-- <link rel="stylesheet" href="../public/Library/jquery-ui-1.13.1/jquery-ui.css" /> -->
+  <!-- <link rel="stylesheet" href="../public/CSS/store.css" /> -->
+  <script src="../public/Library/js/jquery-3.6.0.js"></script>
+  <script src="../public/Library/bootstrap-5.1.3-dist/js/bootstrap.js"></script>
+  <!-- <script src="../public/Library/jquery-ui-1.13.1/jquery-ui.js"></script> -->
+  <script src="../public/Js/printDatetime.js"></script>
+  <script src="../public/Js/operations.js"></script>
+</head>
+
+<body dir="rtl">
+
+
+
+
+  <!--Confirm model-->
+  <div dir='rtl' class="modal" style="background:rgb(0,0,0,0.1);z-index: 99998;" id="confirmModal">
+    <div class="modal-content modal-dialog modal-sm ">
+
+      <div dir='rtl' class="modal-header bg-danger text-white">
+        <button type="button" class="btn-close bg-white" onclick="$('#confirmModal').slideUp('fast')"></button>
+      </div>
+
+      <div class="modal-body">
+        <h4 class="modal-title">هل أنت متأكد؟</h4>
+      </div>
+      <div dir="ltr" class="btn-group btn-group-lg">
+        <button id='modalConfirmDelete' onclick='$("#confirmModal").slideUp("fast")' type="button"
+          class="btn btn-danger">نعم</button>
+        <button onclick='$("#confirmModal").slideUp("fast")' type="button" class="btn btn-success">إلغاء</button>
+      </div>
+    </div>
+  </div>
+  <!--Confirm model-->
+
+
+
+
+
+
+
+
+  <!--Operation Details Model-->
+  <div dir='rtl' class="modal " style="background:rgb(0,0,0,0.4)" id="operationDetailModel">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div dir='rtl' class="modal-header bg-success text-white">
+          <h4 class="modal-title">تفاصيل العملية</h4>
+          <button style="margin-left:0;" type="button" class="btn-close bg-white"
+            onclick="$('#operationDetailModel').slideUp('fast')"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group-flush">
+            <li class="list-group-item text-success">معرّف العملية: <span id="id" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">العملية: <span id="name" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">تفاصيل: <span id="details" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">التوصيل: <span id="deliveryPrice" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">الإجمالي: <span id="totalPrice" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">المدفوع: <span id="totalPaid" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">الربح: <span id="profit" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">حالة الدفع: <span id="paidStatus" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">العملة: <span id="currency" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">ملاحظات: <span id="notes" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">تاريخ إنشاء العملية: <span id="init" class="text-black">
+              </span></li>
+            <div id="executorData" class="d-none">
+              <br class="separator">
+              <div class="my-1 text-center text-primary d-block center align-content-center justify-content-center">
+                معلومات المستفيد
+              </div>
+              <li class="list-group-item text-success">معرّف المنفذ: <span id="executorId" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">اسم المنفذ: <span id="executorFullName" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">جوال/هاتف المنفذ: <span id="executorPhone" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">تقييم المنفذ: <span id="executorRate" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">عمر المنفذ: <span id="executorAge" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">سكن المنفذ: <span id="executorAddress" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">دراسة المنفذ: <span id="executorAcademy" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">مهنة المنفذ: <span id="executorCareerOrProduct"
+                  class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">حساب المنفذ المصرفي: <span id="executorAccountNumber"
+                  class="text-black">
+                </span></li>
+            </div>
+
+            <div id="requestData" class="d-none">
+              <br class="separator">
+              <div class="my-1 text-center text-primary d-block center align-content-center justify-content-center">
+                معلومات الطلب
+              </div>
+              <li class="list-group-item text-success">معرّف مقدم الطلب: <span id="applicantId" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">مقدم الطلب: <span id="applicantFullName" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">جوال/هاتف مقدم الطلب: <span id="applicantPhone"
+                  class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">الموقع: <span id="requestAddress" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">تاريخ التنفيذ: <span id="requestDateOfExecution"
+                  class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">ملاحظات: <span id="requestNotes" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">منبه: <span id="alarm" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">معرّف الطلب: <span id="requestId" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">تاريخ إنشاء الطلب: <span id="requestInit" class="text-black">
+                </span></li>
+            </div>
+          </ul>
+        </div>
+
+        <div dir="ltr" class="btn-group btn-group-lg">
+          <button id='modalDelete' type="button" class="btn btn-danger">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            حذف</button>
+          <button id="modalEdit" type="button" class="btn btn-warning">تعديل</button>
+          <!-- <button id='modalToOperation' type="button" class="btn btn-warning">
+            تحويل للعمليات</button> -->
+          <!--<button id='modalEdit' type="button" class="btn btn-warning">نعديل</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Operation Details Model-->
+
+
+
+
+
+
+
+  <!--Main Table-->
+  <div class="container-fluid">
+    <button onclick="location.href = '/addOperation'" class="btn bg-success text-white m-3" id="addOperation">أضف
+      عملية</button>
+    <div class="d-flex mx-2">
+      <input id="search" class="form-control" type="search" placeholder="بحث" aria-label="Search" />
+    </div>
+    <br />
+    <div style="overflow-x: auto">
+      <table class="table table-bordered text-center" id="operationsTable">
+        <tr class="bg-success text-light">
+          <th>معرّف</th>
+          <th>العملية</th>
+          <th>المستفيد</th>
+          <!--name + familyName; When click will show all executor details-->
+          <th>التوصيل</th>
+          <th>الإجمالي</th>
+          <th>المدفوع</th>
+          <th>الربح</th>
+          <th>حالة الدفع</th>
+          <th>العملة</th>
+          <th>تفاصيل</th>
+          <th>ملاحظات</th>
+          <th>تاريخ العملية</th>
+        </tr>
+      </table>
+    </div>
+    <span id="tableWaiter" style="margin-right: 48%" class="spinner-border text-success spinner-border-lg"></span>
+    <div class="container d-none" style="margin-top: 50px; margin-bottom:100px">
+      <h3 class="text-success">إحصاء</h3>
+      <p class="fa-paragraph">مجموع العمليات: <span id="totalOperations" class="text-success"></span><br>
+        مجموع التوصيل: <span id="totalDelivery" class="text-success"></span><br>
+        مجموع الاجمالي: <span id="totalTotalPrice" class="text-success"></span><br>
+        مجموع الربح: <span id="totalProfit" class="text-success"></span><br>
+        مجموع حالة الدفع (مدفوع): <span id="totalStatusPaid" class="text-success"></span></p>
+    </div>
+    <script>
+      function setAnalysis(operations) {
+        $("#totalOperations").text(operations.length).parent().parent().removeClass('d-none');
+        var totalProfit = 0, totalDelivery = 0, totalTotalPrice = 0, totalStatusPaid = 0;
+        for (let o of operations) {
+          if (o.profit && Number(o.profit))
+            totalProfit += Number(o.profit);
+          if (o.deliveryPrice && Number(o.deliveryPrice))
+            totalDelivery += Number(o.deliveryPrice);
+          if (o.totalPrice && Number(o.totalPrice))
+            totalTotalPrice += Number(o.totalPrice);
+          if (o.totalPaid == o.totalPrice)
+            totalStatusPaid++;
+
+        }
+        $("#totalDelivery").text(totalDelivery);
+        $("#totalTotalPrice").text(totalTotalPrice);
+        $("#totalProfit").text(totalProfit);
+        $("#totalStatusPaid").text(totalStatusPaid);
+        // $("#")
+
+      }
+    </script>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الطلبات</title>
+  <link rel="stylesheet" href="../public/CSS/bootstrap.css" />
+  <!-- <link rel="stylesheet" href="../public/Map/bootstrap.css.map" /> -->
+  <!-- <link rel="stylesheet" href="../public/Library/bootstrap-icons-1.8.0/" /> -->
+  <link rel="stylesheet" href="../public/CSS/jquery-ui.css" />
+</head>
+
+<body dir="rtl">
+
+  <!--Confirm model-->
+  <div dir='rtl' class="modal" style="background:rgb(0,0,0,0.1);z-index: 99998;" id="confirmModal">
+    <div class="modal-content modal-dialog modal-sm ">
+
+      <div dir='rtl' class="modal-header bg-danger text-white">
+        <button type="button" class="btn-close bg-white" onclick="$('#confirmModal').slideUp('fast')"></button>
+      </div>
+
+      <div class="modal-body">
+        <h4 class="modal-title">هل أنت متأكد؟</h4>
+      </div>
+      <div dir="ltr" class="btn-group btn-group-lg">
+        <button id='modalConfirmDelete' onclick='$("#confirmModal").slideUp("fast")' type="button"
+          class="btn btn-danger">نعم</button>
+        <button onclick='$("#confirmModal").slideUp("fast")' type="button" class="btn btn-success">إلغاء</button>
+      </div>
+    </div>
+  </div>
+  <!--Confirm model-->
+
+
+
+
+
+
+
+
+
+
+  <!--Request Details Model-->
+  <div dir='rtl' class="modal " style="background:rgb(0,0,0,0.4)" id="requestDetailModel">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div dir='rtl' class="modal-header bg-success text-white">
+          <h4 class="modal-title">تفاصيل الطلب</h4>
+          <button style="margin-left:0;" type="button" class="btn-close bg-white"
+            onclick="$('#requestDetailModel').slideUp('fast')"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group-flush">
+            <li class="list-group-item text-success">معرّف الطلب: <span id="id" class="text-black">
+            </span></li>
+            <li class="list-group-item text-success">الطلب: <span id="name" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">التفاصيل: <span id="details" class="text-black">
+              </span></li>
+              <li class="list-group-item text-success">الموقع: <span id="address" class="text-black">
+              </span></li>
+            <li class="list-group-item text-success">تاريخ التنفيذ: <span id="dateOfExecution" class="text-black">
+              </span></li>
+
+            <li class="list-group-item text-success">ملاحظات: <span id="notes" class="text-black">
+              </span></li>
+
+            <li class="list-group-item text-success">منبه: <span id="alarm" class="text-black">
+              </span></li>
+
+            
+            <li class="list-group-item text-success">تاريخ إنشاء الطلب: <span id="init" class="text-black">
+              </span></li>
+            <div id="applicantData" class="d-none">
+              <br class="separator">
+              <div class="my-1 text-center text-primary d-block center align-content-center justify-content-center">
+                معلومات مقدم الطلب
+              </div>
+              <li class="list-group-item text-success">معرّف مقدم الطلب: <span id="applicantId" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">مقدم الطلب: <span id="applicantFullName" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">جوال/هاتف مقدم الطلب: <span id="applicantPhone"
+                  class="text-black">
+                </span></li>
+            </div>
+            <div id="executorData" class="d-none">
+              <br class="separator">
+              <div class="my-1 text-center text-primary d-block">
+                معلومات منفذ الطلب
+              </div>
+              <li class="list-group-item text-success">معرّف منفذ الطلب: <span id="executorId" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">منفذ الطلب: <span id="executorFullName" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">جوال/هاتف منفذ الطلب: <span id="executorPhone"
+                  class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">تقييم منفذ الطلب: <span id="executorRate" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">عمر منفذ الطلب: <span id="executorAge" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">سكن المنفذ: <span id="executorAddress" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">دراسة المنفذ: <span id="executorAcademy" class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">مهنة المنفذ: <span id="executorCareerOrProduct"
+                  class="text-black">
+                </span></li>
+              <li class="list-group-item text-success">حساب المنفذ المصرفي: <span id="executorAccountNumber"
+                  class="text-black">
+                </span></li>
+            </div>
+            
+
+          </ul>
+        </div>
+        <div dir="ltr" class="btn-group btn-group-lg">
+          <button id='modalDelete' type="button" class="btn btn-danger">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            حذف</button>
+          <button id="modalEdit" type="button" class="btn btn-warning">تعديل</button>
+          <button id='modalToOperation' type="button" class="btn btn-primary">
+            تحويل للعمليات</button>
+          <!--<button id='modalEdit' type="button" class="btn btn-warning">نعديل</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Request Details Model-->
+
+
+
+
+
+
+
+
+
+  <!--Main Table-->
+  <div class="container-fluid">
+    <button class="btn bg-success text-white m-3" onclick="location.href = '/addRequest'">أضف طلب</button>
+    <div class="d-flex mx-2">
+      <input id="search" class="form-control" type="search" placeholder="بحث" aria-label="Search" />
+    </div>
+    <br />
+    <div style="overflow-x: auto">
+      <table class="table table-bordered text-center" id="usersTable">
+        <tr class="bg-success text-light">
+          <th>رقم</th>
+          <th>الطلب</th>
+          <th>التفاصيل</th>
+          <th>العنوان</th>
+          <th>الملاحظات</th>
+          <th>اسم المقدم الثلاثي</th>
+          <th>لقب المقدم</th>
+          <th>كنية المقدم</th>
+          <!-- <th>أرقام المقدم</th> -->
+          <th>تاريخ التنفيذ</th>
+          <th>اسم المنفذ الثلاثي</th>
+          <th>لقب المنفذ</th>
+          <th>كنية المنفذ</th>
+          <!-- <th>أرقام المنفذ</th> -->
+          <!-- <th>أرقام بنك المنفذ</th> -->
+          <th>منبه</th>
+          <th>إنشاء الطلب</th>
+        </tr>
+      </table>
+    </div>
+    <span id="tableWaiter" style="margin-right: 48%" class="spinner-border text-success spinner-border-lg"></span>
+    <div class="container d-none" style="margin-top: 50px; margin-bottom:100px">
+      <h3 class="text-success">إحصاء</h3>
+      <p>مجموع الطلبات: <span id="totalRequests" class="text-success"></span><br>
+        <!-- مجموع الطلبات: <span id="totalRequests" class="text-success"></span><br> -->
+        <!-- مجموع الطلبات: <span id="totalRequests" class="text-success"></span> -->
+      </p>
+    </div>
+    <script>
+      function setAnalysis(requests){
+        $("#totalRequests").text(requests.length).parent().parent().removeClass('d-none');
+        // $("#")
+      }
+    </script>
+  </div>
+
+  <script src="../public/Js/jquery-3.6.0.js"></script>
+  <script src="../public/Js/printDatetime.js"></script>
+  <script src="../public/Js/bootstrap.js"></script>
+  <script src="../public/Js/jquery-ui.js"></script>
+  <script src="../public/Js/requests.js"></script>
+</body>
+
+</html>

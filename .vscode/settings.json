@@ -1,0 +1,33 @@
+{
+    "cSpell.words": [
+        "datetime",
+        "vcard",
+        "الإجمالي",
+        "التقييم",
+        "التوصيل",
+        "الدراسي",
+        "الدفع",
+        "الربح",
+        "العمر",
+        "العملية",
+        "المستفيد",
+        "حالة",
+        "دولار",
+        "سعودي",
+        "ضعيف",
+        "عجوز",
+        "مستفيد",
+        "مقبول",
+        "ممتاز",
+        "منتج",
+        "يمكن"
+    ],
+    "prettier.arrowParens": "avoid",
+    "prettier.bracketSpacing": false,
+    "prettier.endOfLine": "auto",
+    "prettier.documentSelectors": [
+        "if"
+    ],
+    "prettier.enable": false,
+    "prettier.tabWidth": 5
+}

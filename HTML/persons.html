@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>جهات الاتصال</title>
+  <!-- <link rel="stylesheet" href="../public/CSS/bootstrap.css" /> -->
+  <link rel="text/map" href="../public/Library/bootstrap-5.1.3-dist/css/bootstrap.css.map" />
+  <link rel="stylesheet" href="../public/CSS/bootstrap-file.css" />
+  <!-- <link rel="stylesheet" href="../public/Library/bootstrap-5.1.3-dist/css/bootstrap.css" /> -->
+  <link rel="stylesheet" href="../public/CSS/bootstrap.css" />
+  <link rel="stylesheet" href="../public/CSS/jquery-ui.css" />
+  <link rel="stylesheet" href="../public/CSS/autoComplate.css" />
+  <script src="../public/Js/jquery-3.6.0.js"></script>
+</head>
+
+<body dir="rtl">
+
+
+  <!-- BEGIN Main Table-->
+  <div class="container-fluid">
+    <button class="btn bg-success text-white m-3" id="addUser">أضف جهة اتصال</button>
+    <div id="uploadForm" class="m-3 row">
+      <div class="custom-file" style="max-width: 90%;width:250px;">
+        <input dir="ltr" id="fileInput" type="file" name='fileUploaded' class="custom-file-input"
+          value="تصدير جهات اتصال" />
+        <label dir="ltr" for="fileInput" class="custom-file-label">رفع جهات اتصال</label>
+      </div>
+      <span class="spinner-border d-none mx-3 spinner-border"
+        style="border-color:var(--bs-success) var(--bs-success) var(--bs-success) transparent"></span>
+    </div>
+
+    <script defer>
+      $("#fileInput").on("change", () => {
+        var fileName = $('#fileInput').val().split("\\").pop();
+        $('#fileInput').siblings(".custom-file-label").addClass("selected").html(fileName);
+        if (!isValidFile()) return;
+        $("#uploadForm").attr("disabled", 'disabled').find("span").removeClass("d-none");
+        var file_data = $("#fileInput").prop("files")[0]; // Getting the properties of file from file field
+        var formData = new FormData(); // Creating object of FormData class
+        formData.append("file", file_data) // Appending parameter named file with properties of file_field to formData
+        // formData.append("user_id", 123) // Adding extra parameters to formData
+        // console.log(formData)
+
+        $.ajax({
+          url: "/api/upload/contacts", // Upload Script
+          dataType: 'json',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data: formData, // Setting the data attribute of ajax with file_data
+          type: 'post',
+          enctype: "multipart/form-data",
+          success: (res) => {
+            $("#uploadForm").removeAttr('disabled').find("span").addClass("d-none");
+            console.log(res);
+            if (res.success) {
+              const { contacts, addedContacts, totalPhone, addedPhones } = res.data;
+              Alert(`-مجموع جهات الاتصال ${contacts}.<br>
+              -مجموع جهات الاتصال المضافة ${addedContacts}.<br>
+              -لم يتم إضافة ${contacts - addedContacts}  جهة اتصال بسبب وجودها مسبقا او بسبب اخر.<br>
+              -مجموع الارقام ${totalPhone}.<br>
+              -مجموع الارقام المضافة ${addedPhones}.<br>
+              -لم يتم إضافة ${totalPhone - addedPhones} رقم بسبب وجود الرقم لنفس الشخص او بسبب اخر.`, 'success', null, () => location.reload())
+            } else {
+              Alert(res.msg || "حدث خطأ ما عند إضافة جهات الاتصال", 'danger')
+            }
+          },
+          error: (e) => {
+            $('#uploadForm span.spinner-border').addClass('d-none');
+            console.log(e);
+            Alert(e.msg || "حدث خطأ ما عند إضافة جهات الاتصال", 'danger')
+          }
+        });
+      });
+
+
+      function isValidFile() {
+        if ($('#fileInput').val().split('.').pop() === 'vcf')
+          return true;
+        Alert("خطأ في نوع الملف، نوع الملف يجب ان يكون vcf", 'danger',)
+        return false;
+      }
+    </script>
+    <!-- <button class="btn bg-success text-white m-3" id="addUser">أضف جهة اتصال</button> -->
+    <div class="d-flex">
+      <input id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+      <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+    </div>
+    <br />
+    <div style="overflow-x: auto">
+      <table class="table table-bordered text-center">
+        <tr class="bg-success text-light">
+          <th>معرّف</th>
+          <th>الاسم الثلاثي</th>
+          <th>اللقب</th>
+          <th>الكنية</th>
+          <th>الأرقام</th>
+          <th>التاريخ</th>
+        </tr>
+      </table>
+    </div>
+    <span id="tableWaiter" style="margin-right: 48%" class="spinner-border text-success spinner-border-lg"></span>
+    <div class="container d-none" style="margin-top: 50px; margin-bottom:100px">
+      <h3 class="text-success">إحصاء</h3>
+      <p>مجموع الاشخاص: <span id="totalPersons" class="text-success"></span></p>
+    </div>
+    <script>
+      function setAnalysis(persons){
+        $("#totalPersons").text(persons.length).parent().parent().removeClass('d-none');
+      }
+    </script>
+  </div>
+  <!-- END Main Table-->
+
+
+
+  <!-- Begin AddPersonModal-->
+  <div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.4)" id="addNewPerson">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <form class="modal-content was-validated" action="/">
+        <div dir="rtl" class="modal-header bg-success text-white">
+          <h4 class="modal-title" id="addNewPersonTitle">إضافة</h4>
+          <button type="button" class="btn-close bg-white" style="margin-left: 0"
+            onclick="$('#addNewPerson').slideUp('fast')"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group-flush">
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-lg-12">
+                  <label class="col-form-label col-form-label">الاسم الثلاثي</label>
+                  <input type="text" class="form-control form-control" id="name" placeholder="الاسم الثلاثي"
+                    maxlength="300" />
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">اسم العائلة</label>
+                  <input type="text" class="form-control form-control" id="familyName" placeholder="اسم العائلة"
+                    maxlength="50" />
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">الكنية</label>
+                  <input type="text" class="form-control form-control" id="nickname" placeholder="الكنية"
+                    maxlength="50" />
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item text-success">
+              <div id="phoneContainer" class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-9 col-form-label">الأرقام</label>
+                  <input dir="rtl" type="text" class="form-control phone number col-3 form-control"
+                    placeholder="رقم جوال/هاتف" onkeypress="return inputTypeNumber(event)" maxlength="15"
+                    minlength="9" />
+                </div>
+                <!-- <div class="input-group my-1" dir="ltr">
+                  <div>
+                    <span
+                      onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setPhoneListener();});"
+                      style="border-end-end-radius: 0; border-top-right-radius: 0"
+                      class="close btn bg-danger text-white"
+                      >&times;</span>
+                  </div>
+                  <input
+                    dir="rtl"
+                    type="text"
+                    class="form-control phone form-control"
+                    placeholder="رقم جوال/هاتف"
+                    onkeypress="return inputTypeNumber(event)"
+                    maxlength="15"
+                    minlength="9"
+                    />
+                </div>
+              </div> -->
+            </li>
+
+          </ul>
+        </div>
+        <div dir="ltr" id="btnDiv" class="btn-group btn-group-lg">
+          <button id="btnAdd" type="submit" class="btn btn-warning">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            إضافة
+          </button><button id="btnEdit" type="button" class="btn btn-warning">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            تعديل
+          </button>
+          <button id="btnDelete" type="button" onclick="$('#addNewPerson').slideUp('fast');"
+            class="btn btn-danger d-none">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            حذف
+          </button>
+          <button id="btnCancel" type="button" onclick="$('#addNewPerson').slideUp('fast');"
+            class="btn btn-success">إلغاء</button>
+          <button id="btnToExecutor" type="button" class="btn btn-info">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            تحويل إلى منفذ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- END AddPersonModal-->
+
+
+
+  <script src="../public/Js/printDatetime.js"></script>
+  <script src="../public/Js/bootstrap.js"></script>
+  <script src="../public/Js/jquery-ui.js"></script>
+  <script src="../public/Js/functions/inputTypeNumber.js"></script>
+
+  <script>
+    var users;
+    // search = $("#search");
+    $(function () {
+
+      $("#addUser").click(addUser);
+      var usersTable = $("tbody");
+      $("form").submit(submitForm);
+      $.getJSON("/api/person", (res) => {
+        $("span#tableWaiter").hide();
+        // console.log("~ res", res);
+        if (res.success) {
+          users = res.data;
+          setAnalysis(users);
+          for (const user of users) {
+            if (!user.phone)
+              user.phone = null;
+            if (Array.isArray(user.phone) && user.phone[0] == null)
+              user.phone = null;
+            if (!Array.isArray(user.phone) && user.phone)
+              user.phone = [user.phone];
+            //edit arrays because of DB.
+            usersTable.append(
+              `<tr class="hover">
+                      <td>${user.id || "-"}</td>
+                      <td>${user.name || "-"}</td>
+                      <td>${user.familyName || "-"}</td>
+                      <td>${user.nickname || "-"}</td>
+                      <td dir='ltr'>${user.phone ? user.phone.join(", ") : "-"}</td>
+                      <td>${printDatetime(user.init) || "-"}</td>
+                    </tr>`
+            );
+          }
+          selectUser();
+        } else {
+          console.log(res);
+          $("#alert")
+            .fadeIn("fast")
+            .find("#text")
+            .text(res.msg || "حدث خطأ ما")
+            .parent()
+            .prev()
+            .css("background-color", "var(--bs-danger");
+        }
+      });
+    }); //readyEndsHear.
+
+    function setPhoneListener() {
+      $(".phone").off();
+      $(".phone:last").on("input", () => {
+        $("#phoneContainer").append(`<div style='display:none;' class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setPhoneListener();});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control phone form-control"
+                  												placeholder="رقم اخر"
+                  												onkeypress="return inputTypeNumber(event)"
+                  												maxlength="15"
+                  												minlength="9"/>
+                  										</div>`);
+        $(".phone:last").parent().slideDown("fast");
+        setPhoneListener();
+      });
+    } //END setPhoneListener(...)
+
+
+    function submitForm(e) {
+      e.preventDefault();
+      $("#btnAdd").attr("disabled", "disabled").find("span").css("display", "inline-block");
+      var person = {};
+      person.name = $("#name").val() || null;
+      person.familyName = $("#familyName").val() || null;
+      person.nickname = $("#nickname").val() || null;
+      person.phone = [];
+      let phones = $(".phone");
+      for (let i = 0; i < phones.length; i++) phones.eq(i).val() == "" ? "" : person.phone.push(phones.eq(i).val()); //push numbers that's not empty
+      $.post("/api/person", person, (res) => {
+        $("#btnAdd").removeAttr("disabled").find("span").css("display", "none");
+        if (res.success) {
+          Alert("تم الإضافة بنجاح", 'success', null, () => location.reload())
+          $("#addNewPerson").slideUp("fast");
+        } else {
+          console.log(res);
+          Alert((res.msg || "حدث خطأ ما"), 'danger')
+        }
+      });
+    } //END submitForm
+    //AliCOde------------------------------
+    // search.on("input", (e) => {
+    //   var td = $("td");
+
+    //   for (let i = 0; i < td.length; i++) {
+    //     if (!td.eq(i).text().includes(search.val())) {
+    //       td.eq(i).parent().hide(400);
+    //     }
+    //   }
+    //   for (let i = 0; i < td.length; i++) {
+    //     if (td.eq(i).text().includes(search.val())) {
+    //       td.eq(i).parent().show(400);
+    //     }
+    //   }
+    // });
+
+    function selectUser() {
+      $("#search").on("input", function () {
+        var value = $(this).val().toLowerCase();
+        $("table.table tr:not(:first)").filter(function () {
+          if ($(this).text().toLowerCase().indexOf(value) > -1)
+            $(this).slideDown('1000')
+          else
+            $(this).slideUp('1000')
+        });
+      });
+      var rowUser = $(".hover");
+      rowUser.each(function () {
+        $(this).mouseover(function () {
+          $(this).addClass("bg-light");
+        });
+        $(this).mouseout(function () {
+          $(this).removeClass("bg-light");
+        });
+        $(this).click(function (a) {
+          editUser($(this));
+        });
+      });
+    }
+    function showModal() {
+      setInputRequire();
+      $("#addNewPerson").slideDown("fast", () => {
+        setPhoneListener();
+      });
+    }
+    function editUser(a) {
+      var tr = a.children(),
+        btnDelete = $("#btnDelete");
+      $('#addNewPersonTitle').text('تعديل');
+      $("#btnAdd").hide();
+      $('#btnCancel').hide();
+      $('#btnToExecutor').removeAttr('disabled');
+      $('#btnDelete').removeAttr('disabled');
+      let person;
+      for (let u of users)
+        if (u.id == tr.eq(0).text()) {
+          person = u;
+          if (u.isExecutor == 1) {
+            $('#btnToExecutor').attr('disabled', 'disabled');//if user is already an executor.
+            $('#btnDelete').attr('disabled', 'disabled');
+          }
+        }
+      $('#btnToExecutor').show().click(() => { convertPersonToExecutor(person) })
+      $("#btnEdit").off().show().click(() => {
+        editPerson(person);
+      });
+      // btnAddToRequest = $("#btnCancel"),
+      // btnAddToRequest.text("إضافة لطلب");
+      btnDelete.removeClass("d-none").off().click(() => {
+        $("#btnDelete").attr("disabled", "disabled").find("span").css("display", "inline-block");
+        $.ajax({
+          method: 'delete',
+          url: '/api/person',
+          success: function (res) {
+            $("#btnDelete").removeAttr("disabled").find("span").css("display", "none");
+            if (res.success) {
+              Alert("تم الحذف بنجاح", 'success', null, () => location.reload());
+            } else {
+              console.log(res)
+              Alert((res.msg || "حدث خطأ ما"), 'danger')
+            }
+          },
+          error: function (res) {
+            $("#btnDelete").removeAttr("disabled").find("span").css("display", "none");
+            console.log(res)
+            Alert((res.msg || "حدث خطأ ما"), 'danger')
+          },
+          data: { id: tr.eq(0).text() }
+        })
+      });
+      $("#name").val(tr.eq(1).text());
+      $("#familyName").val(tr.eq(2).text());
+      $("#nickname").val(tr.eq(3).text() == '-' ? '' : tr.eq(3).text());
+      $('.phone').not(':first').parent().remove();
+      let arr = tr.eq(4).text().toString().split(', ');
+      if (arr[0] == '-')
+        arr = [];
+      $(".phone").val(arr.length == 0 ? '' : arr[0]);
+      if (arr.length > 0)
+        for (let i = 1; i < arr.length + 1; i++) {
+          $("#phoneContainer").append(`<div class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setPhoneListener();});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control phone form-control"
+                  												placeholder="رقم اخر"
+                  												onkeypress="return inputTypeNumber(event)"
+                  												maxlength="15"
+                  												minlength="9"
+                                          value="${arr[i] || ''}"/>
+                  										</div>`);
+          setPhoneListener();
+        }
+      showModal();
+    }
+    function addUser() {
+      $('#addNewPersonTitle').text('إضافة')
+      $("#btnAdd").show();
+      $('#btnEdit').hide();
+      $('#btnToExecutor').hide();
+      $('#btnCancel').show();
+      $("#btnDelete").addClass("d-none");
+
+      $("#name").val("");
+      $("#familyName").val("");
+      $("#nickname").val("");
+      $(".phone").val("").not(':first').parent().remove();
+      showModal();
+    }
+
+    function editPerson(p) {
+      $("#btnEdit").attr("disabled", "disabled").find("span").css("display", "inline-block");
+      var person = {};
+      person.id = p.id;
+      person.name = $("#name").val() || null;
+      person.familyName = $("#familyName").val() || null;
+      person.nickname = $("#nickname").val() || null;
+      person.phone = [];
+      let phones = $(".phone");
+      for (let i = 0; i < phones.length; i++) phones.eq(i).val() == "" ? "" : person.phone.push(phones.eq(i).val()); //push numbers that's not empty
+
+      $.ajax({
+        method: 'patch',
+        url: '/api/person',
+        data: { newPerson: person, oldPerson: p },
+        success: (res) => {
+          $("#btnEdit").removeAttr("disabled").find("span").css("display", "none");
+          if (res.success) {
+            //opposite condition; arabic
+            Alert((res.data == `Nothing Changed!` ? "لم يتغير شيء" : "تم التعديل بنجاح"), 'success', null, res.data != `Nothing Changed!` ? () => location.reload() : null)
+            $("#addNewPerson").slideUp('fast');
+          } else {
+            console.log(res);
+            Alert((res.msg || "حدث خطأ ما"), 'danger')
+
+          }
+        }, error: (res) => {
+          $("#btnEdit").removeAttr("disabled").find("span").css("display", "none");
+          console.log(res);
+          Alert((res.msg || "حدث خطأ ما"), 'danger')
+        }
+      })
+    }
+
+    function convertPersonToExecutor(person) {
+      $("#btnToExecutor").attr("disabled", "disabled").find("span").css("display", "inline-block");
+
+      $.ajax({
+        method: 'patch',
+        url: '/api/personToExecutor',
+        data: { person: person },
+        success: (res) => {
+          $("#btnToExecutor").removeAttr("disabled").find("span").css("display", "none");
+          if (res.success) {
+            Alert("تم التحويل بنجاح", 'success', null, () => location.reload());
+            $("#addNewPerson").slideUp('fast');
+          } else {
+            console.log(res);
+            Alert((res.msg || "حدث خطأ ما"), 'danger')
+          }
+        }, error: (res) => {
+          $("#btnEdit").removeAttr("disabled").find("span").css("display", "none");
+          console.log(res)
+          Alert((res.msg || "حدث خطأ ما"), 'danger')
+        }
+      })
+    }
+    function setInputRequire() {
+      setAllInput();
+      $('#name').off().on('input', () => { setAllInput() })
+      $('#familyName').off().on('input', () => { setAllInput() })
+      $('#nickname').off().on('input', () => { setAllInput() })
+    }
+    function setAllInput() {
+      let isAll = isAllInputEmpty();
+      isAll ? $('#name').attr('required', 'required') : $('#name').removeAttr('required')
+      isAll ? $('#familyName').attr('required', 'required') : $('#familyName').removeAttr('required')
+      isAll ? $('#nickname').attr('required', 'required') : $('#nickname').removeAttr('required')
+    }
+    function isAllInputEmpty() {
+      if (!($('#name').val() == '' &&
+        $('#familyName').val() == '' &&
+        $('#nickname').val() == ''))
+        return false;
+      return true;
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بنك المعلومات</title>
+  <link rel="stylesheet" href="../public/CSS/bootstrap.css" />
+  <link rel="text/map" href="../public/Library/bootstrap-5.1.3-dist/css/bootstrap.css.map" />
+  <link rel="stylesheet" href="../public/CSS/jquery-ui.css" />
+  <link rel="stylesheet" href="../public/CSS/autoComplate.css" />
+</head>
+
+<body dir="rtl">
+  
+
+  <!-- BEGIN Main Table-->
+  <div class="container-fluid">
+    <button class="btn bg-success text-white m-3" id="addUser">أضف شخص</button>
+    <div class="d-flex">
+      <input id="search" class="form-control me-2" type="search" placeholder="بحث" aria-label="Search" />
+      <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+    </div>
+    <br />
+    <div style="overflow-x: auto">
+      <table class="table table-bordered text-center" id="usersTable">
+        <tr class="bg-success text-light">
+          <th>الرقم</th>
+          <th>الاسم الثلاثي</th>
+          <th>اللقب</th>
+          <th>الكنية</th>
+          <th>المهنة أو المنتج</th>
+          <th>الأرقام</th>
+          <th>العنوان</th>
+          <th>العمر</th>
+          <th>التقييم</th>
+          <th>المستوى الدراسي</th>
+          <th>رقم الحساب</th>
+          <th>التاريخ</th>
+        </tr>
+      </table>
+    </div>
+    <span id="tableWaiter" style="margin-right: 48%" class="spinner-border text-success spinner-border-lg"></span>
+    <div class="container d-none" style="margin-top: 50px; margin-bottom:100px">
+      <h3 class="text-success">إحصاء</h3>
+      <p>مجموع الاشخاص: <span id="totalExecutor" class="text-success"></span></p>
+    </div>
+    <script>
+      function setAnalysis(executors){
+        $("#totalExecutor").text(executors.length).parent().parent().removeClass('d-none');
+      }
+    </script>
+  </div>
+  <!-- END Main Table-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Begin AddExecutorModal-->
+  <div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.4)" id="addNewExecutor">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <form class="modal-content was-validated">
+        <div dir="rtl" class="modal-header bg-success text-white">
+          <h4 class="modal-title" id="addNewExecutorTitle">إضافة شخص جديد</h4>
+          <button type="button" class="btn-close bg-white" style="margin-left: 0"
+            onclick="$('#addNewExecutor').slideUp('fast')"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group-flush">
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-lg-12">
+                  <label class="col-form-label col-form-label">الاسم الثلاثي</label>
+                  <input type="text" class="form-control form-control" id="name" placeholder="الاسم الثلاثي" required
+                    maxlength="300" />
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">اسم العائلة</label>
+                  <input type="text" class="form-control form-control" id="familyName" placeholder="اسم العائلة"
+                    required maxlength="50" />
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">الكنية</label>
+                  <input type="text" class="form-control form-control" id="nickname" placeholder="الكنية"
+                    maxlength="50" />
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item text-success">
+              <div id="phoneContainer" class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-9 col-form-label">الأرقام</label>
+                  <input dir="rtl" type="text" class="form-control phone number col-3 form-control"
+                    placeholder="رقم جوال/هاتف" onkeypress="return inputTypeNumber(event)" maxlength="15"
+                    minlength="9" />
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">العنوان</label>
+
+                  <input autocomplete="off" type="text" class="form-control form-control" id="address"
+                    placeholder="العنوان" maxlength="100" />
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">العمر</label>
+
+                  <div class="dropdown">
+                    <button id="age" type="button" style="min-width: 120px" class="btn btn-success dropdown-toggle"
+                      onclick="$(this).next().slideToggle('fast')">العمر</button>
+                    <div id="ageContainer" class="dropdown-menu">
+                      <a class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#ageContainer').slideUp('fast').children().removeClass('active');if(is)$('#age').text('العمر'); else $(this).addClass('active').parent().prev().text($(this).text());">طفل</a><a
+                        class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#ageContainer').slideUp('fast').children().removeClass('active');if(is)$('#age').text('العمر'); else $(this).addClass('active').parent().prev().text($(this).text());">شاب</a><a
+                        class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#ageContainer').slideUp('fast').children().removeClass('active');if(is)$('#age').text('العمر'); else $(this).addClass('active').parent().prev().text($(this).text());">عجوز</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">التقييم</label>
+
+                  <div class="dropdown">
+                    <button id="rate" type="button" style="min-width: 120px" class="btn btn-success dropdown-toggle"
+                      onclick="$(this).next().slideToggle('fast')">التقييم</button>
+                    <div id="rateContainer" class="dropdown-menu">
+                      <a class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">ممتاز</a><a
+                        class="dropdown-item btn btn-success" onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); 
+                        else $(this).addClass('active').parent().prev().text($(this).text());">جيد جدا</a>
+                      <a class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">جيد</a><a
+                        class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">مقبول</a><a
+                        class="dropdown-item btn btn-success"
+                        onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">ضعيف</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item text-success">
+              <div id="careerOrProductContainer" class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">مهنة أو منتج</label>
+
+                  <input type="text" class="form-control careerOrProduct form-control" placeholder="مهنة أو منتج"
+                    maxlength="100" />
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item text-success">
+              <div class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">المستوى الدراسي</label>
+
+                  <input type="text" class="form-control form-control" id="academy" placeholder="المستوى الدراسي"
+                    maxlength="50" />
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item text-success">
+              <div id="accountNumberContainer" class="form-group row">
+                <div class="col-12">
+                  <label class="col-form-label col-form-label">رقم حساب مصرفي</label>
+
+                  <input type="text" class="form-control accountNumber form-control" placeholder="رقم حساب مصرفي"
+                    maxlength="100" />
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div dir="ltr" id="btnDiv" class="btn-group btn-group-lg">
+          <button id="btnAdd" type="submit" class="btn btn-warning">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            إضافة
+          </button><button id="btnEdit" type="button" class="btn btn-warning">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            تعديل
+          </button>
+          <button id="btnDelete" type="button" onclick="$('#addNewExecutor').slideUp('fast');"
+            class="btn btn-danger d-none">
+            <span style="display: none" class="spinner-border spinner-border-sm"></span>
+            حذف
+          </button>
+          <button id="btnCansel" type="button" onclick="$('#addNewExecutor').slideUp('fast');"
+            class="btn btn-success">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- END AddExecutorModal-->
+
+
+
+
+
+
+
+  <script src="../public/Js/jquery-3.6.0.js"></script>
+  <script src="../public/Js/printDatetime.js"></script>
+  <script src="../public/Js/bootstrap.js"></script>
+  <script src="../public/Js/jquery-ui.js"></script>
+  <script src="../public/Js/functions/autocomplete.js"></script>
+  <script src="../public/Js/functions/inputTypeNumber.js"></script>
+
+  <script>
+    var users,
+      search = $("#search");
+    $(document).ready(function () {
+      $("#addUser").click(addUser);
+      var usersTable = $("tbody");
+      $("form").submit(submitForm);
+      $.getJSON("/api/arr/addresses", (res) => {
+        if (res.success) {
+          autoComplete($("#address")[0], res.data);
+        } else {
+          console.log(res);
+        }
+      });
+      $.getJSON("/api/executor", (res) => {
+        $("span#tableWaiter").hide();
+        // console.log("~ res", res);
+        if (res.success) {
+          users = res.data;
+          setAnalysis(users);
+          for (const user of users) {
+            // console.log("~ user.phone", user.phone);
+            if (!user.phone)
+              user.phone = null;
+            if (Array.isArray(user.phone) && user.phone[0] == null)
+              user.phone = null;
+            if (!Array.isArray(user.phone) && user.phone)
+              user.phone = [user.phone];
+            if (!user.accountNumber)
+              user.accountNumber = null;
+            if (Array.isArray(user.accountNumber) && user.accountNumber[0] == null)
+              user.accountNumber = null;
+            if (!Array.isArray(user.accountNumber) && user.accountNumber)
+              user.accountNumber = [user.accountNumber];
+            if (!user.careerOrProduct)
+              user.careerOrProduct = null;
+            if (!Array.isArray(user.careerOrProduct) && user.careerOrProduct)
+              user.careerOrProduct = [user.careerOrProduct];
+            if (Array.isArray(user.careerOrProduct) && user.careerOrProduct[0] == null)
+              user.careerOrProduct = null;
+            usersTable.append(
+              `<tr class="hover">
+                      <td>${user.id || "-"}</td>
+                      <td>${user.name || "-"}</td>
+                      <td>${user.familyName || "-"}</td>
+                      <td>${user.nickname || "-"}</td>
+                      <td>${user.careerOrProduct ? user.careerOrProduct.join(" ,") : "-"}</td>
+                      <td>${user.phone ? user.phone.join(" ,") : "-"}</td>
+                      <td>${user.address || "-"}</td>
+                      <td>${user.age || "-"}</td>
+                      <td>${user.rate || "-"}</td>
+                      <td>${user.academy || "-"}</td>
+                      <td>${user.accountNumber ? user.accountNumber.join(" ,") : "-"}</td>
+                      <td>${printDatetime(user.init) || "-"}</td>
+                    </tr>`
+            );
+          }
+          selectUser();
+        } else {
+          console.log(res);
+          $("#alert")
+            .fadeIn("fast")
+            .find("#text")
+            .text(res.msg || "حدث خطأ ما")
+            .parent()
+            .prev()
+            .css("background-color", "var(--bs-danger");
+        }
+      });
+    }); //readyEndsHear.
+
+    function setPhoneListener() {
+      $(".phone").off();
+      $(".phone:last").on("input", () => {
+        $("#phoneContainer").append(`<div style='display:none;' class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setPhoneListener();});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control phone form-control"
+                  												placeholder="رقم اخر"
+                  												onkeypress="return inputTypeNumber(event)"
+                  												maxlength="15"
+                  												minlength="9"/>
+                  										</div>`);
+        $(".phone:last").parent().slideDown("fast");
+        setPhoneListener();
+      });
+    } //END setPhoneListener(...)
+
+    function setCareerOrProductListener() {
+      $(".careerOrProduct").off();
+      $(".careerOrProduct:last").on("input", () => {
+        $("#careerOrProductContainer").append(`<div style='display:none;' class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setCareerOrProductListener()});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control careerOrProduct form-control"
+                  												placeholder="مهنة أو منتج اخر"
+                  												maxlength="100"/>
+                  										</div>`);
+        $(".careerOrProduct:last").parent().slideDown("fast");
+        setCareerOrProductListener();
+      });
+    } //END setCareerOrProductListener(...)
+
+    function setAccountNumberListener() {
+      $(".accountNumber").off();
+      $(".accountNumber:last").on("input", () => {
+        $("#accountNumberContainer").append(`<div style='display:none;' class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setAccountNumberListener()});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control accountNumber form-control"
+                  												placeholder="حساب مصرفي اخر"
+                  												maxlength="100"/>
+                  										</div>`);
+        $(".accountNumber:last").parent().slideDown("fast");
+        setAccountNumberListener();
+      });
+    } //END setAccountNumberListener(...)
+
+    function submitForm(e) {
+      e.preventDefault();
+      $("#btnAdd").attr("disabled", "disabled").find("span").css("display", "inline-block");
+      var executor = {};
+      executor.name = $("#name").val();
+      executor.familyName = $("#familyName").val();
+      executor.nickname = $("#nickname").val() || null;
+      executor.phone = [];
+      let phones = $(".phone");
+      for (let i = 0; i < phones.length; i++) phones.eq(i).val() == "" ? "" : executor.phone.push(phones.eq(i).val()); //push numbers that's not empty
+      executor.address = $("#address").val() || null;
+      executor.age = $("#age").text().trim() == "العمر" ? null : $("#age").text().trim();
+      executor.rate = $("#rate").text().trim() == "التقييم" ? null : $("#rate").text().trim();
+      executor.careerOrProduct = [];
+      let cop = $(".careerOrProduct");
+      for (let i = 0; i < cop.length; i++) cop.eq(i).val() == "" ? "" : executor.careerOrProduct.push(cop.eq(i).val()); //push numbers that's not empty
+      executor.academy = $("#academy").val() || null;
+      executor.accountNumber = [];
+      let an = $(".accountNumber");
+      for (let i = 0; i < an.length; i++) an.eq(i).val() == "" ? "" : executor.accountNumber.push(an.eq(i).val()); //push numbers that's not empty
+      $.post("/api/executor", executor, (res) => {
+        $("#btnAdd").removeAttr("disabled").find("span").css("display", "none");
+        if (res.success) {
+          $("#alert").fadeIn("fast").find('button').click(() => location.reload());
+          $('#alert').find("#text").text("تم الإضافة بنجاح").parent().prev().css("background-color", "var(--bs-success");
+          $("#addNewExecutor").slideUp("fast");
+        } else {
+          console.log(res);
+          $("#alert")
+            .fadeIn("fast")
+            .find("#text")
+            .text(res.msg || "حدث خطأ ما")
+            .parent()
+            .prev()
+            .css("background-color", "var(--bs-danger");
+        }
+      });
+    } //END submitForm
+    //AliCOde------------------------------
+    search.on("input", (e) => {
+      var td = $("td");
+
+      for (let i = 0; i < td.length; i++) {
+        if (!td.eq(i).text().includes(search.val())) {
+          td.eq(i).parent().hide(400);
+        }
+      }
+      for (let i = 0; i < td.length; i++) {
+        if (td.eq(i).text().includes(search.val())) {
+          td.eq(i).parent().show(400);
+        }
+      }
+    });
+
+    function selectUser() {
+      var rowUser = $(".hover");
+      rowUser.each(function () {
+        $(this).mouseover(function () {
+          $(this).addClass("bg-light");
+        });
+        $(this).mouseout(function () {
+          $(this).removeClass("bg-light");
+        });
+        $(this).click(function (a) {
+          editUser($(this));
+        });
+      });
+    }
+    function showModal() {
+      $("#addNewExecutor").slideDown("fast", () => {
+        setPhoneListener();
+        setCareerOrProductListener();
+        setAccountNumberListener();
+      });
+    }
+    function editUser(a) {
+      $('#addNewExecutorTitle').text('تعديل');
+
+      var tr = a.children(),
+        btnDelete = $("#btnDelete");
+      $("#btnAdd").hide();
+      $("#btnEdit").off().show().click(() => {
+        editExecutor(tr.eq(0).text());
+      })
+      // btnAddToRequest = $("#btnCancel"),
+      // btnAddToRequest.text("إضافة لطلب");
+      btnDelete.removeClass("d-none").off().click(() => {
+        $("#btnDelete").attr("disabled", "disabled").find("span").css("display", "inline-block");
+        $.ajax({
+          method: 'delete',
+          url: '/api/executor',
+          success: function (res) {
+            $("#btnDelete").removeAttr("disabled").find("span").css("display", "none");
+            console.log(res)
+            if (res.success) {
+              $("#alert")
+                .fadeIn("fast")
+                .find("#text")
+                .text("تم الحذف بنجاح")
+                .parent()
+                .prev()
+                .css("background-color", "var(--bs-success");
+              $('#alert').find('button').click(() => location.reload());
+            } else
+              $("#alert")
+                .fadeIn("fast")
+                .find("#text")
+                .text(res.msg || "حدث خطأ ما")
+                .parent()
+                .prev()
+                .css("background-color", "var(--bs-danger");
+          },
+          error: function (res) {
+            $("#btnDelete").removeAttr("disabled").find("span").css("display", "none");
+            console.log(res)
+            $("#alert")
+              .fadeIn("fast")
+              .find("#text")
+              .text(res.msg || "حدث خطأ ما")
+              .parent()
+              .prev()
+              .css("background-color", "var(--bs-danger");
+          },
+          data: { id: tr.eq(0).text() }
+        })
+      });
+      $("#name").val(tr.eq(1).text());
+      $("#familyName").val(tr.eq(2).text());
+      $("#nickname").val(tr.eq(3).text() == '-' ? '' : tr.eq(3).text());
+      $('.careerOrProduct').not(':first').parent().remove();
+      let arr = tr.eq(4).text().toString().split(' ,');
+      if (arr[0] == '-')
+        arr = [];
+      $(".careerOrProduct").val(arr.length == 0 ? '' : arr[0]);
+      if (arr.length > 0)
+        for (let i = 1; i < arr.length + 1; i++) {
+          $("#careerOrProductContainer").append(`<div class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setCareerOrProductListener()});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control careerOrProduct form-control"
+                  												placeholder="مهنة أو منتج اخر"
+                                          value="${arr[i] || ''}"
+                  												maxlength="100"/>
+                  										</div>`);
+          setCareerOrProductListener();
+        }
+      $('.phone').not(':first').parent().remove();
+      arr = tr.eq(5).text().toString().split(' ,');
+      if (arr[0] == '-')
+        arr = [];
+      $(".phone").val(arr.length == 0 ? '' : arr[0]);
+      if (arr.length > 0)
+        for (let i = 1; i < arr.length + 1; i++) {
+          $("#phoneContainer").append(`<div class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setPhoneListener();});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control phone form-control"
+                  												placeholder="رقم اخر"
+                  												onkeypress="return inputTypeNumber(event)"
+                  												maxlength="15"
+                  												minlength="9"
+                                          value="${arr[i] || ''}"/>
+                  										</div>`);
+          setPhoneListener();
+        }
+      $("#address").val(tr.eq(6).text() == '-' ? '' : tr.eq(6).text());
+      $("#age").text(tr.eq(7).text() == '-' ? 'العمر' : tr.eq(7).text());
+      $("#rate").text(tr.eq(8).text() == '-' ? 'التقييم' : tr.eq(8).text());
+      $("#academy").val(tr.eq(9).text() == '-' ? '' : tr.eq(9).text());
+      $('.accountNumber').not(':first').parent().remove();
+      arr = tr.eq(10).text().toString().split(' ,');
+      if (arr[0] == '-')
+        arr = [];
+      $(".accountNumber").val(arr.length == 0 ? '' : arr[0]);
+      if (arr.length > 0)
+        for (let i = 1; i < arr.length + 1; i++) {
+          $("#accountNumberContainer").append(`<div class="input-group my-1" dir="ltr">
+                  											<div>
+                  												<span
+                  													onclick="$(this).parent().parent().slideUp('fast',()=>{$(this).parent().parent().remove();setAccountNumberListener()});"
+                  													style="border-end-end-radius: 0; border-top-right-radius: 0"
+                  													class="close btn bg-danger text-white"
+                  													>&times;</span>
+                  											</div>
+                  											<input
+                  												dir="rtl"
+                  												type="text"
+                  												class="form-control accountNumber form-control"
+                  												placeholder="حساب مصرفي اخر"
+                  												maxlength="100"
+                                          value="${arr[i] || ''}"/>
+                  										</div>`);
+          setAccountNumberListener();
+        }
+      showModal();
+    }
+    function addUser() {
+      $('#addNewExecutorTitle').text('إضافة شخص جديد')
+      $("#btnAdd").show();
+      $('#btnEdit').hide();
+      $("#btnDelete").addClass("d-none");
+      $("#name").val("");
+      $("#familyName").val("");
+      $("#nickname").val("");
+      $(".careerOrProduct").val("").not(':first').parent().remove();
+      $(".phone").val("").not(':first').parent().remove();
+      $("#address").val("");
+      $("#age").text("العمر");
+      $("#rate").text("التقييم");
+      $("#academy").val("");
+      $(".accountNumber").val("").not(':first').parent().remove();
+      showModal();
+    }
+
+    function editExecutor(id) {
+      $("#btnEdit").attr("disabled", "disabled").find("span").css("display", "inline-block");
+      var executor = {};
+      executor.id = id;
+      executor.name = $("#name").val();
+      executor.familyName = $("#familyName").val();
+      executor.nickname = $("#nickname").val() || null;
+      executor.phone = [];
+      let phones = $(".phone");
+      for (let i = 0; i < phones.length; i++) phones.eq(i).val() == "" ? "" : executor.phone.push(phones.eq(i).val()); //push numbers that's not empty
+      executor.address = $("#address").val() || null;
+      executor.age = $("#age").text().trim() == "العمر" ? null : $("#age").text().trim();
+      executor.rate = $("#rate").text().trim() == "التقييم" ? null : $("#rate").text().trim();
+      executor.careerOrProduct = [];
+      let cop = $(".careerOrProduct");
+      for (let i = 0; i < cop.length; i++) cop.eq(i).val() == "" ? "" : executor.careerOrProduct.push(cop.eq(i).val()); //push numbers that's not empty
+      executor.academy = $("#academy").val() || null;
+      executor.accountNumber = [];
+      let an = $(".accountNumber");
+      for (let i = 0; i < an.length; i++) an.eq(i).val() == "" ? "" : executor.accountNumber.push(an.eq(i).val()); //push numbers that's not empty
+      var oldEx;
+      for (let u of users)
+        if (u.id == executor.id) {
+          oldEx = u; break;
+        }
+      $.ajax({
+        method: 'patch',
+        url: '/api/executor',
+        data: { newExecutor: executor, oldExecutor: oldEx },
+        success: (res) => {
+          $("#btnEdit").removeAttr("disabled").find("span").css("display", "none");
+
+          console.log(res);
+          if (res.success) {
+            $("#alert")
+              .fadeIn("fast")
+              .find("#text")
+              .text(res.data == `Nothing Changed!` ? "لم يتغير شيء" : "تم التعديل بنجاح")//opposite condition; arabic
+              .parent()
+              .prev()
+              .css("background-color", "var(--bs-success");
+            if (res.data != `Nothing Changed!`)
+              $('#alert').find('button').click(() => location.reload());
+            $("#addNewExecutor").slideUp('fast');
+          } else {
+            $("#alert")
+              .fadeIn("fast")
+              .find("#text")
+              .text(res.msg || "حدث خطأ ما")
+              .parent()
+              .prev()
+              .css("background-color", "var(--bs-danger");
+          }
+        }, error: (res) => {
+          $("#btnEdit").removeAttr("disabled").find("span").css("display", "none");
+          console.log(res)
+          $("#alert")
+            .fadeIn("fast")
+            .find("#text")
+            .text(res.msg || "حدث خطأ ما")
+            .parent()
+            .prev()
+            .css("background-color", "var(--bs-danger");
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

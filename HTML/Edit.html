@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>تعديل</title>
+		<link rel="stylesheet" href="..\public\CSS\bootstrap.css" />
+		<link rel="stylesheet" href="..\public\CSS/jquery-ui.css" />
+		<link rel="stylesheet" href="../public/CSS/jquery-ui-timepicker-addon.min.css" />
+		<script src="..\public\Js\jquery-3.6.0.js"></script>
+		<script src="../public/Js/autocomplete.js"></script>
+		<script src="../public/Js/jquery-ui.js"></script>
+		<script src="../public/Js/jquery-ui-timepicker-addon.min.js"></script>
+		<style>
+			.autocomplete {
+				/*the container must be positioned relative:*/
+				position: relative;
+				display: inline-block;
+			}
+
+			.autocomplete-items {
+				position: absolute;
+				border: 1px solid var(--bs-success);
+				border-bottom: none;
+				border-top: none;
+				z-index: 4;
+				/*position the autocomplete items to be the same width as the container:*/
+				top: 100%;
+				left: 0;
+				right: 0;
+			}
+			.autocomplete-items div {
+				padding: 10px;
+				cursor: pointer;
+				background-color: #ddd;
+				opacity: 0.85;
+				border-bottom: 1px solid var(--bs-success);
+			}
+			.autocomplete-items div:hover {
+				/*when hovering an item:*/
+				background-color: var(--bs-success);
+				color: #ffffff;
+			}
+			.autocomplete-active {
+				/*when navigating through the items using the arrow keys:*/
+				background-color: var(--bs-success) !important;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+	<body>
+		<form dir="rtl" class="my-5" autocomplete="off">
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">الطلب</label>
+				<div class="col-sm-10 autocomplete">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestName"
+						placeholder="الطلب"
+						autocomplete="off"
+					/>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>تفاصيل الطلب</label
+				>
+				<div class="col-sm-10">
+					<textarea
+						type="text"
+						class="form-control form-control-sm"
+						id="requestDetails"
+						placeholder="تفاصيل الطلب"
+					></textarea>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>مقدم الطلب</label
+				>
+				<div class="col-sm-6">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestApplicant3Names"
+						placeholder="الاسم الثلاثي"
+					/>
+				</div>
+				<div class="col-sm-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestApplicantLastName"
+						placeholder="اللقب"
+					/>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>رقم المقدم</label
+				>
+				<div class="col-sm-3">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestApplicantPhone1"
+						placeholder="رقم المقدم"
+					/>
+				</div>
+				<div class="col-sm-3">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestApplicantPhone2"
+						placeholder="رقم اخر"
+					/>
+				</div>
+				<div class="col-sm-2">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestApplicantPhone3"
+						placeholder="رقم اخر"
+					/>
+				</div>
+				<div class="col-sm-2">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestApplicantPhone4"
+						placeholder="رقم اخر"
+					/>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>منفذ الطلب</label
+				>
+				<div class="col-sm-6">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecutor3Names"
+						placeholder="الاسم الثلاثي"
+					/>
+				</div>
+				<div class="col-sm-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecutorLastName"
+						placeholder="اللقب"
+					/>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>رقم المنفذ</label
+				>
+				<div class="col-sm-3">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecutorPhone1"
+						placeholder="رقم المنفذ"
+					/>
+				</div>
+				<div class="col-sm-3">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecutorPhone2"
+						placeholder="رقم اخر"
+					/>
+				</div>
+				<div class="col-sm-2">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecutorPhone3"
+						placeholder="رقم اخر"
+					/>
+				</div>
+				<div class="col-sm-2">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecutorPhone4"
+						placeholder="رقم اخر"
+					/>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">الموقع</label>
+				<div class="col-sm-10">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						id="requestAddress"
+						placeholder="موقع التنفيذ"
+					/>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>ملاحظات</label
+				>
+				<div class="col-sm-10">
+					<textarea
+						type="text"
+						class="form-control form-control-sm"
+						id="requestNotes"
+						placeholder="ملاحظات"
+					></textarea>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+					>تاريخ التنفيذ</label
+				>
+				<div class="col-sm-4">
+					<input
+						dir="ltr"
+						type="text"
+						class="form-control form-control-sm"
+						id="requestExecuteDate"
+					/>
+					<div id="datepicker"></div>
+				</div>
+			</div>
+
+			<div class="form-group row my-3">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">منبه</label>
+				<div class="col-sm-4">
+					<input dir="ltr" type="text" class="form-control form-control-sm" id="alarm" />
+				</div>
+			</div>
+			<div class="form-group row my-3">
+				<div class="col-sm-12">
+					<button
+						style="width: 100%"
+						type="submit"
+						class="btn btn-warning btn-lg btn-block"
+						name="submit"
+					>
+						تعديل
+					</button>
+				</div>
+			</div>
+		</form>
+
+		<script>
+			let id = Number(location.search.substring(location.search.lastIndexOf("=") + 1));
+			if (typeof id !== "number") {
+				alert("حدث خطأ ما");
+				location.href = "/";
+			}
+
+			$(document).ready(() => {
+				//send an id and get the correspond request object
+				$.getJSON("/api/requestById", id, (res) => {
+					if (res.success) {
+						let r = res.data;
+						$("#requestName").val(r.name);
+						$("#requestDetails").val(r.details||'');
+						$("#requestApplicant3Names").val(r.applicant3Names||'');
+						$("#requestApplicantLastName").val(r.applicantLastName||'');
+						$("#requestApplicantPhone1").val(r.applicantPhone[0]||'');
+						$("#requestApplicantPhone2").val(r.applicantPhone[1]||'');
+						$("#requestApplicantPhone3").val(r.applicantPhone[2]||'');
+						$("#requestApplicantPhone4").val(r.applicantPhone[3]||'');
+						$("#requestExecutor3Names").val(r.executor3Names||'');
+						$("#requestExecutorLastName").val(r.executorLastName||'');
+						$("#requestExecutorPhone1").val(r.executorPhone[0]||'');
+						$("#requestExecutorPhone2").val(r.executorPhone[1]||'');
+						$("#requestExecutorPhone3").val(r.executorPhone[2]||'');
+						$("#requestExecutorPhone4").val(r.executorPhone[3]||'');
+						$("#requestAddress").val(r.address||'');
+						$("#requestNotes").val(r.notes||'');
+						$("#requestExecuteDate").val(r.dateOfExecution||'');
+						$("#alarm").val(r.alarm||'');
+					} else {
+						console.log(res);
+						alert(res.msg || "حدث خطأ ما");
+					}
+				});
+
+				$.getJSON("/api/requestsData", (res) => {
+					if (res.success) {
+						let requestsNames = [];
+						for (let r of res.data) requestsNames.push(r.name);
+						autocomplete($("#requestName")[0], requestsNames);
+					} else {
+						console.log(res);
+						alert(res.msg || "حدث خطأ ما");
+					}
+				});
+				$.getJSON("/api/personsData", (res) => {
+					if (res.success) {
+						//res.data=[{threeNames:'احمد هاشم محسن',lastName:'الكاف',phone:['7132423','777242'...]},{threeNames:'علي حسين علي',lastName:'بن شعيب',phone:['734243',...]}...]
+						let threeNames = [];
+						let lastNames = [];
+						for (let n of res.data) {
+							threeNames.push(n.threeNames);
+							lastNames.push(n.lastName);
+						}
+						autocomplete(
+							$("#requestApplicant3Names").change(() => {
+								for (let p of res.data)
+									if (p.threeNames == $("#requestApplicant3Names").val()) {
+										$("requestApplicantPhone1").val(p.phone[0] || "");
+										$("requestApplicantPhone2").val(p.phone[1] || "");
+										$("requestApplicantPhone3").val(p.phone[2] || "");
+										$("requestApplicantPhone4").val(p.phone[3] || "");
+									}
+							})[0],
+							threeNames
+						);
+						autocomplete(
+							$("#requestExecutor3Names").change(() => {
+								for (let p of res.data)
+									if (p.threeNames == $("#requestExecutor3Names").val()) {
+										$("requestExecutorPhone1").val(p.phone[0] || "");
+										$("requestExecutorPhone2").val(p.phone[1] || "");
+										$("requestExecutorPhone3").val(p.phone[2] || "");
+										$("requestExecutorPhone4").val(p.phone[3] || "");
+									}
+							})[0],
+							threeNames
+						);
+						autocomplete($("#requestApplicantLastName")[0], lastNames);
+						autocomplete($("#requestExecutorLastName")[0], lastNames);
+					} else {
+						console.log(res);
+						alert(res.msg || "حدث خطأ ما");
+					}
+				});
+
+				$("#requestExecuteDate")
+					.val(
+						new Date().getFullYear() +
+							"/" +
+							(new Date().getMonth() + 1) +
+							"/" +
+							new Date().getDate()
+					)
+					.change(() => $("#alarm").val($("#requestExecuteDate").val() + " 12:00 am"))
+					.datepicker(arabicDatePickerConfig);
+				$("#alarm").datetimepicker(arabicDatePickerConfig);
+
+				$("form").submit((e) => {
+					$('button[type="submit"]').append(
+						'<span class="spinner-border spinner-border-sm"></span>'
+					);
+					e.preventDefault();
+					var editedRequest = {};
+					editedRequest.name = $("#requestName").val() || undefined;
+					editedRequest.requestDetails = $("#requestDetails").val() || undefined;
+					editedRequest.applicant3Names = $("#requestApplicant3Names").val() || undefined;
+					editedRequest.applicantLastName = $("#requestApplicantLastName").val() || undefined;
+					editedRequest.applicantPhone = [
+						$("#requestApplicantPhone1").val() || undefined,
+						$("#requestApplicantPhone2").val() || undefined,
+						$("#requestApplicantPhone3").val() || undefined,
+						$("#requestApplicantPhone4").val() || undefined,
+					];
+                    editedRequest.applicantPhone.filter((p)=>typeof p !== 'undefined');//eliminate empty values
+					editedRequest.executor3Names = $("#requestExecutor3Names").val()||undefined;
+					editedRequest.executorLastName = $("#requestExecutorLastName").val()||undefined;
+					editedRequest.executorPhone = [
+						$("#requestExecutorPhone1").val()||undefined,
+						$("#requestExecutorPhone2").val()||undefined,
+						$("#requestExecutorPhone3").val()||undefined,
+						$("#requestExecutorPhone4").val()||undefined,
+					];
+                    editedRequest.executorPhone.filter((p)=>typeof p !== 'undefined');
+					editedRequest.address = $("#requestAddress").val()||undefined;
+					editedRequest.notes = $("#requestNotes").val()||undefined;
+					editedRequest.dateOfExecution = $("#requestExecuteDate").val()||undefined;
+					editedRequest.alarm = $("#alarm").val()||undefined;
+					console.log(editedRequest);
+					if (editedRequest.name||editedRequest.name == "") alarm("اسم الطلب يجب ان يمتلئ");
+					else if (editedRequest.applicantPhone.length == 0)
+						alarm("رقم مقدم الطلب يجب ان يمتلئ على الاقل رقم واحد");
+					else
+						$.post("/api/editRequest", editedRequest, (res) => {
+							$('button[type="submit"] span').remove();
+							if (res.success) {
+								alert("تم الإضافة بنجاح");
+								location.href = "/";
+							} else {
+								console.log(res);
+								alert(res.msg || "حدث خطأ ما");
+							}
+						});
+				});
+			});
+
+			var arabicDatePickerConfig = {
+				firstDay: 6,
+				isRTL: true,
+				dayNamesMin: ["احد", "اثنين", "ثلثاء", "اربعاء", "خميس", "جمعة", "سبت"],
+				// dateFormat: "yy/mm/dd",
+				changeMonth: true,
+				changeYear: true,
+				monthNamesShort: [
+					"يناير",
+					"فبراير",
+					"مارس",
+					"أبريل",
+					"مايو",
+					"يونيو",
+					"يوليو",
+					"أغسطس",
+					"سبتمبر",
+					"أكتوبر",
+					"نوفمبر",
+					"ديسمبر",
+				],
+				closeText: "اغلاق",
+				prevText: "السابق",
+				nextText: "التالي",
+				currentText: "اليوم",
+				yearRange: "c-1:c+2",
+				timeFormat: "hh:mm tt",
+				dateFormat: "yy/mm/dd",
+				stepHour: 1,
+				stepMinute: 15,
+				controlType: "slider",
+				oneLine: true,
+				timeInput: true,
+				timeText: "الوقت",
+				hourText: "الساعة",
+				minuteText: "الدقيقة",
+			};
+		</script>
+	</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>تسجيل دخول</title>
+		<!-- <link rel="stylesheet" href="..\public\CSS\W3.css" /> -->
+		<link rel="stylesheet" href="..\public\CSS/bootstrap.css" />
+		<script src="..\public\Js\jquery-3.6.0.js"></script>
+		<script src="..\public\Js/bootstrap.js"></script>
+		<style>
+			.separator {
+				height: 0;
+				/* margin: 20px 0; */
+				border: 1px solid var(--primary);
+				box-shadow: 0px 0px 4px rgb(0, 0, 0, 0.6);
+				width: 100%;
+				background-color: var(--bs-success);
+			}
+		</style>
+	</head>
+
+	<body dir="rtl">
+    
+		<!-- Begin Login Form -->
+		<form autocomplete="off" dir="rtl" class="mx-1">
+			<div class="container my-4">
+				<h1 dir="auto">تسجيل دخول</h1>
+				<p dir="auto">الرجاء تسجيل الدخول للوصول إلى قاعدة البيانات</p>
+				<div class="form-group row my-3">
+					<hr class="separator" />
+					<label class="col-sm-2 col-form-label col-form-label-sm" for="username"
+						><b>اسم المستخدم</b></label
+					>
+					<input
+						class="col-sm-10"
+						dir="auto"
+						type="text"
+						placeholder="ادخل اسم المستخدم"
+						name="username"
+						id="username"
+						required
+					/>
+				</div>
+				<div class="form-group row my-3">
+					<label class="col-sm-2 col-form-label col-form-label-sm" for="psw"
+						><b>كلمة السر</b></label
+					>
+					<input
+						class="col-sm-10"
+						dir="auto"
+						type="password"
+						placeholder="ادخل كلمة السر"
+						name="password"
+						id="password"
+						required
+					/>
+
+					<hr class="separator" style="margin: 20px 0" />
+				</div>
+				<button type="submit" class="btn w-100 btn-success btn-lg btn-block">تسجيل دخول</button>
+			</div>
+		</form>
+		<!-- End Login Form -->
+
+		<div id="loader"></div>
+		<hr class="separator" style="margin-top: 200px" />
+		<p style="margin: 20px; font-size: var(--small)">&copy;2022 Ali Bin-Sheap & Ahmad Alkaf</p>
+		<!--Begin Script-->
+		<script>
+			$("form").submit((e) => {
+				e.preventDefault();
+				// console.log("submit");
+				let username = $("#username").val();
+				// console.log(`login : username`, username);
+				let password = $("#password").val();
+				// console.log(`login : password`, password);
+				$("#loader").css("display", "block");
+				$.post("/api/login", { username: username, password: password }, (res) => {
+					$("#loader").css("display", "none");
+					if (res.success) location.href = "/"
+					else Alert(res.msg,'danger');
+					console.log("server res:", res);
+				});
+			});
+		</script>
+		<!--End Script-->
+	</body>
+</html>

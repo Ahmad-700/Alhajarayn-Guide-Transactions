@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>تعديل طلب</title>
+	<link rel="stylesheet" href="..\public\CSS\bootstrap.css" />
+	<link rel="stylesheet" href="..\public\CSS/jquery-ui.css" />
+	<link rel="stylesheet" href="../public/CSS/jquery-ui-timepicker-addon.min.css" />
+	<link rel="stylesheet" href="../public/CSS/autoComplate.css" />
+
+	<script src="..\public\Js\jquery-3.6.0.js"></script>
+	<script src="../public/Js/functions/autoComplete.js"></script>
+	<script src="../public/Js/jquery-ui.js"></script>
+	<script src="../public/Js/jquery-ui-timepicker-addon.min.js"></script>
+	<script src="..\public\Js/bootstrap.js"></script>
+	<script src="../public/Js/bootstrap.bundle.js"></script>
+	<script src="../public/Js/functions/autocomplete.js"></script>
+	<script src="../public/Js/functions/inputTypeNumber.js"></script>
+	<script src="../public/Js/addRequest.js"></script>
+	<script src="../public/Js/printDatetime.js"></script>
+
+
+</head>
+
+<body>
+
+
+	<!--Begin AddNewRequestNameModal-->
+	<div dir='rtl' class="modal" style="background:rgb(0,0,0,0.4)" id="addNewRequestName">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div dir='rtl' class="modal-header bg-success text-white">
+					<h4 class="modal-title">إضافة اسم طلب جديد</h4>
+					<button type="button" class="btn-close bg-white" style="margin-left:0;"
+						onclick="$('#addNewRequestName').slideUp('fast')"></button>
+				</div>
+				<div class="modal-body">
+					<ul class="list-group-flush">
+						<li class="list-group-item text-success">
+							<div class="form-group row my-3">
+								<div class="col-sm-12">
+									<input type="text" class="form-control form-control" id="newName"
+										placeholder="الاسم الجديد" />
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div dir="ltr" class="btn-group btn-group-lg">
+					<button type="submit" id='btnAdd' onclick="$('#addNewRequestName').slideUp('fast');addNewRequestName();"
+						type="button" class="btn btn-warning">إضافة</button>
+					<button type="button" onclick="$('#addNewRequestName').fadeOut()" class="btn btn-success">إلغاء</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--End AddNewRequestNameModal-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- Begin AddPersonModal-->
+	<div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.4)" id="addNewPerson">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<form class="modal-content was-validated">
+				<div dir="rtl" class="modal-header bg-success text-white">
+					<h4 class="modal-title" id="addNewPersonTitle">إضافة</h4>
+					<button type="button" class="btn-close bg-white" style="margin-left: 0"
+						onclick="$('#addNewPerson').slideUp('fast')"></button>
+				</div>
+				<div class="modal-body">
+					<ul class="list-group-flush">
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-lg-12">
+									<label class="col-form-label col-form-label">الاسم الثلاثي</label>
+									<input type="text" class="form-control form-control" id="applicantName"
+										placeholder="الاسم الثلاثي" maxlength="300" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">اسم العائلة</label>
+									<input type="text" class="form-control form-control" id="applicantFamilyName"
+										placeholder="اسم العائلة" maxlength="50" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">الكنية</label>
+									<input type="text" class="form-control form-control" id="applicantNickname"
+										placeholder="الكنية" maxlength="50" />
+								</div>
+							</div>
+						</li>
+
+						<li class="list-group-item text-success">
+							<div id="phoneContainer" class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-9 col-form-label">الأرقام</label>
+									<input dir="rtl" type="text" class="form-control applicantPhone number col-3 form-control"
+										placeholder="رقم جوال/هاتف" onkeypress="return inputTypeNumber(event)" maxlength="15"
+										minlength="9" />
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div dir="ltr" id="btnDiv" class="btn-group btn-group-lg">
+					<button type="submit" class="btn btn-warning">
+						<span style="display: none" class="spinner-border spinner-border-sm"></span>
+						إضافة
+					</button>
+					<button type="button" onclick="$('#addNewPerson').slideUp('fast');"
+						class="btn btn-success">إلغاء</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- END AddPersonModal-->
+
+
+
+
+
+
+
+
+	<!--Begin SearchApplicantModal-->
+	<div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.4);" id="searchApplicantModal">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<form class="modal-content">
+				<div dir="rtl" class="modal-header bg-success text-white">
+					<h4 class="modal-title" id="searchApplicantModalTitle">حدد مقدم طلب</h4>
+					<button type="button" class="btn-close bg-white" style="margin-left: 0"
+						onclick="$('#searchApplicantModal').slideUp('fast')"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group row m-2 mb-4">
+						<div class="d-flex">
+							<div class="w-75 d-inline m-1">
+								<input type="text" class="form-control form-control" id="searchApplicantModalInput"
+									placeholder="بحث" onkeyup="searchApplicantBaseOn($(this).val(),persons);" />
+							</div>
+							<div class="w-25 d-inline m-1">
+								<input class="btn btn-success w-100" value="اضافة" type="button"
+									onclick="$('#searchApplicantModal').slideUp('fast',()=>showAddPersonModal());" />
+							</div>
+						</div>
+					</div>
+					<ul class="list-group-flush">
+						<!--Persons will loaded here by javascript-->
+					</ul>
+				</div>
+				<div dir="ltr" id="btnDiv" class="btn-group btn-group-lg">
+					<button type="submit" class="btn btn-warning"> تحديد </button>
+					<button type="button" onclick="$('#searchApplicantModal').slideUp('fast');"
+						class="btn btn-success">إلغاء</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!--End SearchApplicantModal-->
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- <button onclick="$('#searchApplicantModal').slideDown();">searchApplicant</button>
+  <button onclick="$('#searchExecutorModal').slideDown();">searchExecutor</button> -->
+	<!-- Begin AddExecutorModal-->
+	<div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.4)" id="addNewExecutor">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<form class="modal-content was-validated">
+				<div dir="rtl" class="modal-header bg-success text-white">
+					<h4 class="modal-title" id="addNewExecutorTitle">إضافة منفذ جديد</h4>
+					<button type="button" class="btn-close bg-white" style="margin-left: 0"
+						onclick="$('#addNewExecutor').slideUp('fast')"></button>
+				</div>
+				<div class="modal-body">
+					<ul class="list-group-flush">
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-lg-12">
+									<label class="col-form-label col-form-label">الاسم الثلاثي</label>
+									<input type="text" class="form-control form-control" id="executorName"
+										placeholder="الاسم الثلاثي" required maxlength="300" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">اسم العائلة</label>
+									<input type="text" class="form-control form-control" id="executorFamilyName"
+										placeholder="اسم العائلة" required maxlength="50" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">الكنية</label>
+									<input type="text" class="form-control form-control" id="executorNickname"
+										placeholder="الكنية" maxlength="50" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div id="executorPhoneContainer" class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-9 col-form-label">الأرقام</label>
+									<input dir="rtl" type="text" class="form-control executorPhone number col-3 form-control"
+										placeholder="رقم جوال/هاتف" onkeypress="return inputTypeNumber(event)" maxlength="15"
+										minlength="9" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">العنوان</label>
+
+									<input autocomplete="off" type="text" class="form-control form-control" id="executorAddress"
+										placeholder="العنوان" maxlength="100" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">العمر</label>
+									<div class="dropdown">
+										<button id="executorAge" type="button" style="min-width: 120px"
+											class="btn btn-success dropdown-toggle"
+											onclick="$(this).next().slideToggle('fast')">العمر</button>
+										<div id="ageContainer" class="dropdown-menu">
+											<a class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#ageContainer').slideUp('fast').children().removeClass('active');if(is)$('#age').text('العمر'); else $(this).addClass('active').parent().prev().text($(this).text());">طفل</a><a
+												class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#ageContainer').slideUp('fast').children().removeClass('active');if(is)$('#age').text('العمر'); else $(this).addClass('active').parent().prev().text($(this).text());">شاب</a><a
+												class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#ageContainer').slideUp('fast').children().removeClass('active');if(is)$('#age').text('العمر'); else $(this).addClass('active').parent().prev().text($(this).text());">عجوز</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">التقييم</label>
+									<div class="dropdown">
+										<button id="executorRate" type="button" style="min-width: 120px"
+											class="btn btn-success dropdown-toggle"
+											onclick="$(this).next().slideToggle('fast')">التقييم</button>
+										<div id="rateContainer" class="dropdown-menu">
+											<a class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">ممتاز</a><a
+												class="dropdown-item btn btn-success" onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); 
+															 else $(this).addClass('active').parent().prev().text($(this).text());">جيد جدا</a>
+											<a class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">جيد</a><a
+												class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">مقبول</a><a
+												class="dropdown-item btn btn-success"
+												onclick="let is = $(this).hasClass('active');$('#rateContainer').slideUp('fast').children().removeClass('active');if(is)$('#rate').text('التقييم'); else $(this).addClass('active').parent().prev().text($(this).text());">ضعيف</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div id="careerOrProductContainer" class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">مهنة أو منتج</label>
+
+									<input type="text" class="form-control executorCareerOrProduct form-control"
+										placeholder="مهنة أو منتج" maxlength="100" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">المستوى الدراسي</label>
+
+									<input type="text" class="form-control form-control" id="executorAcademy"
+										placeholder="المستوى الدراسي" maxlength="50" />
+								</div>
+							</div>
+						</li>
+						<li class="list-group-item text-success">
+							<div id="accountNumberContainer" class="form-group row">
+								<div class="col-12">
+									<label class="col-form-label col-form-label">رقم حساب مصرفي</label>
+									<input type="text" class="form-control executorAccountNumber form-control"
+										placeholder="رقم حساب مصرفي" maxlength="100" />
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div dir="ltr" id="btnDiv" class="btn-group btn-group-lg">
+					<button id="btnAdd" type="submit" class="btn btn-warning">
+						<span style="display: none" class="spinner-border spinner-border-sm"></span>
+						إضافة
+					</button>
+					<button id="btnCansel" type="button" onclick="$('#addNewExecutor').slideUp('fast');"
+						class="btn btn-success">إلغاء</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- END AddExecutorModal-->
+
+
+
+
+
+
+
+
+	<!--Begin SearchExecutorModal-->
+	<div dir="rtl" class="modal" style="background: rgb(0, 0, 0, 0.4);" id="searchExecutorModal">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<form class="modal-content">
+				<div dir="rtl" class="modal-header bg-success text-white">
+					<h4 class="modal-title" id="searchExecutorModalTitle">حدد منفذ</h4>
+					<button type="button" class="btn-close bg-white" style="margin-left: 0"
+						onclick="$('#searchExecutorModal').slideUp('fast')"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group row m-2 mb-4">
+						<div class="d-flex">
+							<div class="w-75 d-inline m-1">
+								<input type="text" class="form-control form-control" id="searchExecutorModalInput"
+									placeholder="بحث" onkeyup="searchExecutorBaseOn($(this).val());" />
+							</div>
+							<div class="w-25 d-inline m-1">
+								<input class="btn btn-success w-100" value="اضافة" type="button"
+									onclick="$('#searchExecutorModal').slideUp('fast',()=>showAddExecutorModal());" />
+							</div>
+						</div>
+					</div>
+					<ul class="list-group-flush">
+						<!--Persons will loaded here by javascript-->
+					</ul>
+				</div>
+				<div dir="ltr" id="btnDiv" class="btn-group btn-group-lg">
+					<button type="submit" class="btn btn-warning"> تحديد </button>
+					<button type="button" onclick="$('#searchExecutorModal').slideUp('fast');"
+						class="btn btn-success">إلغاء</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!--End SearchExecutorModal-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--######################### Add Request #########################-->
+	<form dir="rtl" class="my-5 mx-5" autocomplete="off" id="addRequest">
+		<div class="form-group row my-3">
+			<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">الطلب</label>
+			<div class="col-sm-10 autocomplete">
+				<div class="dropdown">
+					<button style="width:150px" type="button" class="btn btn-success dropdown-toggle"
+						onclick="$(this).next().slideToggle('fast')">
+						حدد طلب
+					</button>
+					<div id="requestName" class="dropdown-menu">
+						<div class="dropdown-divider"></div><a style="cursor:pointer;" class="dropdown-item btn btn-success"
+							onclick="$(this).parent().slideUp('fast');$('#addNewRequestName').slideDown('fast');">إضافة
+							طلب...</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row my-3">
+			<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">تفاصيل الطلب</label>
+			<div class="col-sm-10">
+				<textarea type="text" class="form-control form-control" id="requestDetails"
+					placeholder="تفاصيل الطلب"></textarea>
+			</div>
+		</div>
+
+		<div class="form-group  my-3">
+			<div class="row">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">مقدم الطلب</label>
+				<div class="col-sm-10">
+					<input style="width:150px;" type="button" class="form-control text-white bg-success form-control"
+						id="applicantSearch" onclick="$('#searchApplicantModal').slideDown('fast');" value="إضافة" />
+				</div>
+			</div>
+			<div id="applicantInfo" class="d-none">
+				<div class="row  my-2">
+
+					<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">الاسم كامل</label>
+					<div class="col-sm-4">
+						<input type="button" disabled class="form-control form-control" id="inputApplicantName"
+							placeholder="الاسم الثلاثي" />
+					</div>
+					<div class="col-sm-3">
+						<input type="button" disabled class="form-control form-control" id="inputApplicantFamilyName"
+							placeholder="اللقب" />
+					</div>
+					<div class="col-sm-3">
+						<input type="button" disabled class="form-control form-control" id="inputApplicantNickname"
+							placeholder="الكنية" />
+					</div>
+
+				</div>
+				<div class=''>
+					<div id="applicantPhoneContainer" class="form-group row my-3 d-flex">
+						<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">رقم مقدم الطلب</label>
+						<!--todo duplicate below for each number-->
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="form-group  my-3">
+			<div class="row">
+				<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">منفذ الطلب</label>
+				<div class="col-sm-10">
+					<input style="width:150px;" type="button" class="form-control text-white bg-success form-control"
+						id="executorSearch" onclick="$('#searchExecutorModal').slideDown('fast');" value="إضافة" />
+				</div>
+			</div>
+			<div id="executorInfo" class="d-none">
+				<div class="row  my-2">
+
+					<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">الاسم كامل</label>
+					<div class="col-sm-4">
+						<input type="button" disabled class="form-control form-control" id="inputExecutorName"
+							placeholder="الاسم الثلاثي" />
+					</div>
+					<div class="col-sm-3">
+						<input type="button" disabled class="form-control form-control" id="inputExecutorFamilyName"
+							placeholder="اللقب" />
+					</div>
+					<div class="col-sm-3">
+						<input type="button" disabled class="form-control form-control" id="inputExecutorNickname"
+							placeholder="الكنية" />
+					</div>
+
+				</div>
+				<div class=''>
+					<div id="addRequestExecutorPhoneContainer" class="form-group row my-3 d-flex">
+						<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">رقم منفذ الطلب</label>
+						<!--todo duplicate below for each number-->
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row my-3">
+			<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">الموقع</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control form-control" id="requestAddress" placeholder="موقع التنفيذ" />
+			</div>
+		</div>
+
+		<div class="form-group row my-3">
+			<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">ملاحظات</label>
+			<div class="col-sm-10">
+				<textarea type="text" class="form-control form-control" id="requestNotes" placeholder="ملاحظات"></textarea>
+			</div>
+		</div>
+
+		<div class="form-group row my-3">
+			<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">تاريخ التنفيذ</label>
+			<div class="col-sm-4">
+				<input dir="ltr" type="text" class="form-control form-control" id="requestExecuteDate" />
+				<div id="datepicker"></div>
+			</div>
+		</div>
+
+		<div class="form-group row my-3">
+			<label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">منبه</label>
+			<div class="col-sm-4">
+				<input dir="ltr" type="text" class="form-control form-control" id="alarm" />
+			</div>
+		</div>
+		<div class="form-group row my-3">
+			<div class="col-sm-12">
+				<button dir='ltr' id='btnAddRequest' type="submit" class="btn w-100 btn-success btn-lg btn-block"
+					name="submit">
+					<span style="display: none" class="spinner-border spinner-border-sm"></span>
+					تعديل الطلب
+				</button>
+			</div>
+		</div>
+	</form>
+
+	<script>
+		"use strict";
+		var persons = [];//person is applicant
+		var executors = [];
+		var newRequest = {};
+		$(document).ready(async () => {
+			persons = await getJsonPerson0ApplicantsSearchModal().catch((e) => console.log(e))//before '0' fun name, after is why?
+			executors = await getJsonExecutor0SearchModal().catch((e) => console.log(e));//before '0' fun name, after is why?
+			$("#searchApplicantModal form").submit(e => { searchApplicantToReqObj(e, persons) });
+			$("#searchExecutorModal form").submit(e => searchExecutorToReqObj(e, executors));
+			$("#addNewPerson form").submit(e => addNewPersonToReqObj(e));
+			$("#addNewExecutor form").submit(e => addNewExecutorToReqObj(e));
+			getJsonArrAddresses0AutoComplete();
+			// getJsonAddresses0AddRequest();
+			setInputDateDialog();
+
+			setRequestInfoToBeEdit();
+
+			$("form#addRequest").submit((e) => submitEditRequest(e));
+		});
+
+		async function setRequestInfoToBeEdit() {
+			let id = Number(location.href.split('=')[1]);
+			console.log(id)
+			newRequest = await getRequestById(id).catch(err => { console.log('err', err); Alert((err.msg || "حدث خطأ في جلب معلومات الطلب"), "danger", null, () => location.href = '/'); })
+			if (newRequest) {
+				setHtmlRequest(newRequest);
+			}
+
+		}
+
+		function setHtmlRequest(request) {
+			$("#requestName").prev().text(request.name);
+			$("#requestDetails").val(request.details);
+			$("#requestAddress").val(request.address);
+			$("#requestNotes").val(request.notes);
+			let d = printDatetime(request.dateOfExecution).split(' ');
+			d.pop();
+			$("#requestExecuteDate").val(d.join(' '));
+			d = printDatetime(request.alarm).split(' ');
+			d.pop();
+			$("#alarm").val(d.join(' '));
+			if (request.applicantId) {
+				setApplicant({
+					id: request.applicantId,
+					name: request.applicantName,
+					familyName: request.applicantFamilyName,
+					nickname: request.applicantNickname,
+					phone: request.applicantPhone
+				});
+				$('#applicantSearch').val('تعديل');
+				let contactId = $('#searchApplicantModal').find('.contactId');
+				for (let i = 0; i < contactId.length; i++)
+					if (contactId.eq(i).text() == request.applicantId.toString()) {
+						contactId.eq(i).parent().parent().parent().addClass('active');
+						break;
+					}
+				
+			}
+			if (request.executorId) {
+				setExecutor({
+					id: request.executorId,
+					name: request.executorName,
+					familyName: request.executorFamilyName,
+					nickname: request.executorNickname,
+					phone: request.executorPhone
+				});
+				$('#executorSearch').val('تعديل');
+				let contactId = $('#searchExecutorModal').find('.contactId');
+				for (let i = 0; i < contactId.length; i++)
+					if (contactId.eq(i).text() == request.executorId.toString()) {
+						contactId.eq(i).parent().parent().parent().addClass('active');
+						break;
+					}
+			}
+		}
+
+	</script>
+	<script>//functions
+		function submitEditRequest(e) {
+			$("#btnAddRequest").attr("disabled", "disabled").find("span").css("display", "inline-block");
+			e.preventDefault();
+			newRequest.name = $("#requestName").prev().text() || null;
+			if (newRequest.name == 'حدد طلب' || newRequest.name == '')
+				newRequest.name = null;
+			newRequest.details = $("#requestDetails").val() || null;
+			newRequest.address = $("#requestAddress").val() || null;
+			newRequest.notes = $("#requestNotes").val() || null;
+			newRequest.dateOfExecution = $("#requestExecuteDate").val() || null;
+			newRequest.alarm = $("#alarm").val() || null;
+
+			console.log(newRequest);
+			if (!newRequest.applicantId) {
+				$("#btnAddRequest").removeAttr("disabled").find("span").css("display", "none");
+				Alert("يجب إضافة مقدم للطلب!", 'danger',)
+			} else if (!newRequest.name || newRequest.name == "") {
+				Alert("اسم الطلب يجب ان يمتلئ", 'danger');
+				$("#btnAddRequest").removeAttr("disabled").find("span").css("display", "none");
+			} else
+				$.ajax({
+					url: "/api/request",
+					method: 'PATCH',
+					data: newRequest,
+					success: (res) => {
+						$("#btnAddRequest").removeAttr("disabled").find("span").css("display", "none");
+						console.log('patch:/api/request', res);
+						if (res.success) {
+							Alert("تم التعديل بنجاح", 'success', null, () => location.href = '/')
+						} else {
+							console.log(res);
+							Alert((res.msg || "حدث خطأ ما! عند تعديل الطلب"), 'danger')
+
+						}
+					},
+					error: (e) => {
+						console.log(e);
+						Alert((e.msg || "حدث خطأ ما! عند تعديل الطلب"), 'danger');
+					}
+				});
+		}
+
+
+
+		function getRequestById(id) {
+			return new Promise((resolve, reject) => {
+				console.log('id', id);
+				if (!id)
+					return reject("id is undefined won't send to the server", id);
+				$.ajax({
+					url: '/api/request',
+					method: 'put',
+					dataType: 'json',
+					data: { id },
+					success: (res) => {
+						console.log('res', res);
+						if (res.success)
+							return resolve(res.data);
+						else return reject(res);
+					}, error: (res) => reject(res),
+				})
+			});
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+What I should Do:
+- instead of repeating getElementById, and then get these data into an OBJECT,
+ after that send it to server. I should put a class in any form and if user click submit in that form
+ then there is a function will be called, this FUNCTION is general, has two parameters an OBJECT
+ and the form element. after that this FUNCTION should look for any element inside the given form
+ that have specific class(so, I should in each input write a class for this FUNCTION like 'asp-for' in ASP.NET  I would use class like 'getMyData')
+ so, this FUNCTION will have array of ELEMENTS that should take its value and put it into the OBJECT
+ but wait a min, how to know the attribute name? this FUNCTION should look for an id of each ELEMENTS
+ and assign the OBJECT's attribute with same name as ELEMENT id. 
+ Example html:
+ <input id ='name' class='getMyData'/>
+ <input id ='age' class='getMyData'/>
+ <input id ='familyName' class='getMyData'/>
+ 
+ this FUNCTION:
+ function thisFUNCTION(obj, form){
+    var elements = form.find('.getMyData');
+    for(let e of elements){
+       let idName = e.attr('id');
+       obj[idName] = e.val();
+    }
+ }
+ 
+ or even more complex then that but easy to implement, another example using custom attribute of html element, which by the way you can make any attribute, html do not say no.
+  Example html:
+ <input getMyData = 'name'/>
+ <input getMyData = 'age'/>
+ <input getMyData = 'familyName'/>
+ 
+ this FUNCTION:
+ function thisFUNCTION(obj, form){
+    var elements = form.find('input[getMyData]');//I think this how you get all elements with an attribute called 'getMyData'. Never the less there is a way
+    for(let e of elements){
+       let attrValue = e.attr('getMyData');
+       obj[attrValue] = e.val();
+    }
+ }
+ 
+   The goal of given the FUNCTION a form parameter, is if there are many 
+forms in one html file you can easily call this FUNCTION to get any shape(Scheme)
+of object by form structure.
+
+   The second Example is better in sense of id attribute is used one time.
+But this isn't an issue because we provide the FUNCTION with the form so the 
+search will be constraint inside that form.
+
+#Problems:
+   - I have to say there is no problem dealing with input elements. Other elements
+have an issue because of function called val() this is for only input (at least to my 
+knowledge) but if we want value from a button as (custom drop down list) that have button
+will show div list that will when choose an item will change button text as selected.
+The issue is that button do not have value they have a text. So, we need to call function
+text() instead of val().
+
+   - empty values.
+   - default values in other elements beside input.
+   ...
+   
+#In conclusion:
+   - some problem can easily be solved but some is not general like solving them will be wast of time.
+   Also, this FUNCTION will be very large because of rear situation (doesn't worth the effort).
+   So, just ignore dealing with this FUNCTION in that particular element or situation, and 
+   the rest of data get them by this FUNCTION.
+   - this FUNCTION if it helpful for half the form then it worth implement it, for just that half.
+   

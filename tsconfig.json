@@ -1,0 +1,8 @@
+{
+    "compilerOptions":{
+        "target":"esnext",
+        "watch":true,
+        "module": "es6",// was commonJs
+        "lib":["dom","es2017"],
+    }
+}
